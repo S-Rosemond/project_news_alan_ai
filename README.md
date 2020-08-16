@@ -1,3 +1,5 @@
+# Code along using Typescript under code-along branch
+
 # Voice Controlled React News Application - Alan AI Voice Assistant
 
 ### [Live Site](https://alan-news-app.netlify.app/)
