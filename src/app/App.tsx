@@ -3,6 +3,7 @@ import alanBtn from '@alan-ai/alan-sdk-web';
 
 interface Commands {
   command: string;
+  data?: any;
 }
 
 function App() {
@@ -11,9 +12,9 @@ function App() {
   useEffect(() => {
     alanBtn({
       key: alanKey,
-      onCommand: ({ command }: Commands) => {
-        if (command === 'testCommand') {
-          alert('This code was executed');
+      onCommand: ({ command, data }: Commands) => {
+        if (command === 'newHeadlines') {
+          console.log(data);
         }
       },
     });
