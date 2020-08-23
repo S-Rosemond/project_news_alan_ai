@@ -1,7 +1,7 @@
 // Adding Alan ai studio code here in case it gets deleted
 // sm changes from tutorial, I want to preserve
 
-const apiKey = 'alan studio use only: fill';
+const apiKey = 'fill in key';
 let savedArticles = [];
 
 // Use this sample to create your own voice commands
@@ -13,7 +13,7 @@ intent(
 
 // News by Source
 intent('Give me the news from $(source* (.*))', (p) => {
-  let NEWS_API_URL = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&country=us`;
+  let NEWS_API_URL = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}`;
 
   if (p.source.value) {
     if (p.source.value.split(' ').length > 1) {
@@ -29,7 +29,7 @@ intent('Give me the news from $(source* (.*))', (p) => {
   api.request(NEWS_API_URL, (error, response, body) => {
     const { articles } = JSON.parse(body);
 
-    if (articles.length < 1) {
+    if (!articles.length) {
       p.play('Sorry, please try searching news from a different source');
       return;
     }
@@ -53,7 +53,7 @@ intent("what's up with $(term* (.*))", (p) => {
 
   api.request(NEWS_API_URL, (error, response, body) => {
     const { articles } = JSON.parse(body);
-
+    console.log(articles);
     if (articles.length < 1) {
       p.play(
         'Sorry, please try searching for (a different term | something else)'
@@ -133,4 +133,19 @@ const confirmation = context(() => {
   intent('No', (p) => {
     p.play('(okeydoke | Ok, sounds good to me)');
   });
+});
+
+intent('open (the|) ( article|) (number|) $(number* (.*))', (p) => {
+  if (p.number.value) {
+    p.play({
+      command: 'open',
+      number: p.number.value,
+      articles: savedArticles,
+    });
+  }
+});
+
+intent('go back', (p) => {
+  p.play('Sure, going back');
+  p.play({ command: 'newHeadlines', articles: [] });
 });

@@ -28,8 +28,16 @@ const InfoCard = () => {
   ];
 
   const classes = useStyles();
-  const list = infoCards.map((infoCard) => (
-    <Grid item xs={12} sm={6} md={4} lg={3} className={classes.infoCard}>
+  const list = infoCards.map((infoCard, idx) => (
+    <Grid
+      key={idx}
+      item
+      xs={12}
+      sm={6}
+      md={4}
+      lg={3}
+      className={classes.infoCard}
+    >
       <div className={classes.card} style={{ backgroundColor: infoCard.color }}>
         <Typography variant='h5'>{infoCard.title}</Typography>
 

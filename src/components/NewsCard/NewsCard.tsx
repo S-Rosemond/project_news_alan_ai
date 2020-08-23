@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, createRef, useRef } from 'react';
 import {
   Card,
   CardActions,
@@ -27,8 +27,29 @@ const NewsCard = ({ idx, article, activeArticle }: NewsCardProps) => {
 
   const classes = useStyles();
 
+  const [elRefs, setElRefs] = useState<any>([]);
+
+  const scrollToRef = (ref: React.RefObject<any>) => {
+    window.scroll(0, ref.current.offsetTop - 50);
+  };
+
+  useEffect(() => {
+    setElRefs((refs: any) =>
+      Array(20)
+        .fill(null)
+        .map((_, j) => refs[j] || createRef())
+    );
+  }, [idx]);
+
+  useEffect(() => {
+    if (idx === activeArticle && elRefs[activeArticle]) {
+      scrollToRef(elRefs[activeArticle]);
+    }
+  }, [idx, activeArticle, elRefs]);
+
   return (
     <Card
+      ref={elRefs[idx]}
       className={classNames(
         classes.card,
         activeArticle === idx ? classes.activeCard : null

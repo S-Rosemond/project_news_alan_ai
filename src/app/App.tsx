@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import alanBtn from '@alan-ai/alan-sdk-web';
+import wordsToNumbers from 'words-to-numbers';
 import NewsCards from '../components/NewsCards/NewsCards';
 
 import useStyles from './styles';
@@ -7,6 +8,7 @@ import useStyles from './styles';
 interface Commands {
   command: string;
   articles?: any;
+  number: string;
 }
 
 function App() {
@@ -21,7 +23,7 @@ function App() {
     // Keeping for future reference: compare vs axios
     let result;
 
-    if (newsArticles.length < 1) {
+    if (!newsArticles.length) {
       result = await fetch(
         `https://newsapi.org/v2/top-headlines?apiKey=${process.env.REACT_APP_NEWS}&sources=bbc-news`
       );
@@ -34,12 +36,26 @@ function App() {
   useEffect(() => {
     alanBtn({
       key: alanKey,
-      onCommand: ({ command, articles }: Commands) => {
+      onCommand: ({ command, articles, number }: Commands) => {
         if (command === 'newHeadlines') {
           setNewsArticles(articles);
           setActiveArticle(-1);
         } else if (command === 'highlight') {
           setActiveArticle((prev) => prev + 1);
+        } else if (command === 'open') {
+          const parsedNumber: any =
+            number.length > 2
+              ? wordsToNumbers(number, { fuzzy: true })
+              : number;
+
+          const article = articles[parsedNumber - 1];
+
+          if (parsedNumber > 20) {
+            alanBtn().playText('Please try that again');
+          } else if (article) {
+            window.open(article.url, '_blank');
+            alanBtn().playText('opening');
+          }
         }
       },
     });
